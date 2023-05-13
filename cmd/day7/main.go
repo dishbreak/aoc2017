@@ -85,9 +85,7 @@ func part2(input []string) int {
 		hits := make(map[int][]*program)
 
 		for _, n := range p.next {
-			matches := hits[n.acc]
-			matches = append(matches, n)
-			hits[n.acc] = matches
+			hits[n.acc] = append(hits[n.acc], n)
 		}
 
 		for wt, matches := range hits {
