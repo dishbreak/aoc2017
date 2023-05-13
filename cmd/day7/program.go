@@ -10,7 +10,6 @@ type program struct {
 	id         string
 	weight     int
 	deps       []string
-	parent     *program
 	acc        int
 	next       []*program
 	unbalanced bool

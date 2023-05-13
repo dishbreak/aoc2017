@@ -53,10 +53,8 @@ func part2(input []string) int {
 
 	var start *program
 	for _, n := range nodes {
-		if pn, ok := parent[n.id]; !ok {
+		if _, ok := parent[n.id]; !ok {
 			start = nodes[n.id]
-		} else {
-			n.parent = nodes[pn]
 		}
 		for i, dep := range n.deps {
 			n.next[i] = nodes[dep]
