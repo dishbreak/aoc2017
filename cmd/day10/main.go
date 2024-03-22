@@ -21,12 +21,12 @@ func main() {
 }
 
 type knotHasher struct {
-	data []int
+	data []uint8
 	pos  int
 	skip int
 }
 
-func newKnotHasher(d []int) *knotHasher {
+func newKnotHasher(d []uint8) *knotHasher {
 	return &knotHasher{
 		data: d,
 		pos:  0,
@@ -34,15 +34,15 @@ func newKnotHasher(d []int) *knotHasher {
 	}
 }
 
-func (k *knotHasher) hash(length int) {
-	var l []int
-	wraparound := k.pos+length >= len(k.data)
+func (k *knotHasher) hash(length uint8) {
+	var l []uint8
+	wraparound := k.pos+int(length) >= len(k.data)
 
 	if !wraparound {
-		l = k.data[k.pos : k.pos+length]
+		l = k.data[k.pos : k.pos+int(length)]
 	} else {
-		l = make([]int, length)
-		for i := 0; i < length; i++ {
+		l = make([]uint8, length)
+		for i := 0; i < int(length); i++ {
 			l[i] = k.data[(k.pos+i)%len(k.data)]
 		}
 	}
@@ -57,19 +57,20 @@ func (k *knotHasher) hash(length int) {
 		}
 	}
 
-	k.pos = (k.pos + length + k.skip) % len(k.data)
+	k.pos = (k.pos + int(length) + k.skip) % len(k.data)
 	k.skip++
 }
 
-func extract(r io.Reader) []int {
+func extract(r io.Reader) []uint8 {
 	s := bufio.NewScanner(r)
 	s.Scan()
 	parts := strings.Split(s.Text(), ",")
 
-	result := make([]int, len(parts))
+	result := make([]uint8, len(parts))
 
 	for i := range parts {
-		result[i], _ = strconv.Atoi(parts[i])
+		tmp, _ := strconv.Atoi(parts[i])
+		result[i] = uint8(tmp)
 	}
 
 	return result
@@ -78,9 +79,9 @@ func extract(r io.Reader) []int {
 func part1(r io.Reader) int {
 	lengths := extract(r)
 
-	data := make([]int, 256)
+	data := make([]uint8, 256)
 	for i := range data {
-		data[i] = i
+		data[i] = uint8(i)
 	}
 
 	h := newKnotHasher(data)
@@ -89,7 +90,7 @@ func part1(r io.Reader) int {
 		h.hash(length)
 	}
 
-	return h.data[0] * h.data[1]
+	return int(h.data[0]) * int(h.data[1])
 }
 
 var suffix = []uint8{17, 31, 73, 47, 23}
