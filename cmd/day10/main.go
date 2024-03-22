@@ -18,6 +18,7 @@ func main() {
 
 	fmt.Printf("Part 1: %d\n", part1(f))
 	f.Seek(0, 0)
+	fmt.Printf("Part 2: %s\n", part2(f))
 }
 
 type knotHasher struct {
@@ -59,6 +60,12 @@ func (k *knotHasher) hash(length uint8) {
 
 	k.pos = (k.pos + int(length) + k.skip) % len(k.data)
 	k.skip++
+}
+
+func (k *knotHasher) round(lengths []uint8) {
+	for _, l := range lengths {
+		k.hash(l)
+	}
 }
 
 func extract(r io.Reader) []uint8 {
@@ -108,4 +115,36 @@ func processInput(r io.Reader) []uint8 {
 
 	result = append(result, suffix...)
 	return result
+}
+
+func (k *knotHasher) dense() string {
+	var sb strings.Builder
+
+	for i := 0; i < 16; i++ {
+		segment := k.data[i*16 : (i*16)+16]
+		acc := segment[0]
+		for j := 1; j < 16; j++ {
+			acc ^= segment[j]
+		}
+		sb.WriteString(fmt.Sprintf("%02x", acc))
+	}
+
+	return sb.String()
+}
+
+func part2(r io.Reader) string {
+	lengths := processInput(r)
+
+	data := make([]uint8, 256)
+	for i := range data {
+		data[i] = uint8(i)
+	}
+
+	h := newKnotHasher(data)
+
+	for round := 0; round < 64; round++ {
+		h.round(lengths)
+	}
+
+	return h.dense()
 }
