@@ -91,3 +91,20 @@ func part1(r io.Reader) int {
 
 	return h.data[0] * h.data[1]
 }
+
+var suffix = []uint8{17, 31, 73, 47, 23}
+
+func processInput(r io.Reader) []uint8 {
+	result := make([]uint8, 0)
+
+	s := bufio.NewReader(r)
+	for b, err := s.ReadByte(); err == nil; b, err = s.ReadByte() {
+		if b == '\n' {
+			continue
+		}
+		result = append(result, b)
+	}
+
+	result = append(result, suffix...)
+	return result
+}
