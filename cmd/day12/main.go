@@ -18,5 +18,5 @@ func main() {
 
 func part1(r io.Reader) int {
 	g := parse(r)
-	return g.trace()
+	return g.trace(0)
 }

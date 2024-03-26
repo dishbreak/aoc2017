@@ -9,6 +9,7 @@ import (
 
 type node struct {
 	id        int
+	grouped   bool
 	neighbors map[int]*node
 }
 
@@ -59,9 +60,14 @@ func parse(r io.Reader) graph {
 	return result
 }
 
-func (g graph) trace() int {
+func (g graph) trace(startingId int) int {
 	visited := make(map[int]bool)
-	q := []*node{g[0]}
+	start := g[startingId]
+	if start.grouped {
+		return -1
+	}
+
+	q := []*node{start}
 
 	for len(q) != 0 {
 		n := q[0]
@@ -75,6 +81,10 @@ func (g graph) trace() int {
 		for _, p := range n.neighbors {
 			q = append(q, p)
 		}
+	}
+
+	for id, val := range visited {
+		g[id].grouped = val
 	}
 
 	return len(visited)
