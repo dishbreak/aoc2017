@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/dishbreak/aoc2017/lib"
 )
 
 func main() {
@@ -133,18 +135,7 @@ func (k *knotHasher) dense() string {
 }
 
 func part2(r io.Reader) string {
-	lengths := processInput(r)
-
-	data := make([]uint8, 256)
-	for i := range data {
-		data[i] = uint8(i)
-	}
-
-	h := newKnotHasher(data)
-
-	for round := 0; round < 64; round++ {
-		h.round(lengths)
-	}
-
-	return h.dense()
+	k := lib.NewKnotHasher()
+	k.AddReader(r)
+	return k.String()
 }
