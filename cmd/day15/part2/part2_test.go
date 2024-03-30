@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPart1(t *testing.T) {
+func TestPart2(t *testing.T) {
 	input := `Generator A starts with 65
 Generator B starts with 8921`
 	r := strings.NewReader(input)
