@@ -78,6 +78,7 @@ func main() {
 
 	s := string(rawData)
 	fmt.Printf("Part 1: %d\n", part1(s))
+	fmt.Printf("Part 2: %d\n", part2(s))
 }
 
 func part1(s string) int {
@@ -90,4 +91,20 @@ func part1(s string) int {
 	}
 
 	return dist(c.o, point{})
+}
+
+func part2(s string) int {
+	steps := strings.Split(s, ",")
+
+	c := &cursor{}
+	max := -1
+
+	for _, step := range steps {
+		c.move(step)
+		if d := dist(c.o, point{}); d > max {
+			max = d
+		}
+	}
+
+	return max
 }
